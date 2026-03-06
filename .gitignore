@@ -1,0 +1,10 @@
+
+# Playwright
+node_modules/
+test-results/
+reports/*
+.auth/
+.github/
+.vscode/
+.cache/
+configs/env.ts

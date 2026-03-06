@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2020", // modern JS target
+    "module": "ESNext", // ESM modules
+    "moduleResolution": "node", // Node-style resolution
+    "strict": true,
+    "esModuleInterop": true, // allows default imports from CommonJS
+    "forceConsistentCasingInFileNames": true, // avoids case issues
+    "baseUrl": ".", // root for path aliases
+    "paths": {
+      "@elements": ["src/elements/index.ts"],
+      "@elements/*": ["src/elements/*"],
+      "@components": ["src/components/index.ts"],
+      "@components/*": ["src/components/*"],
+      "@screens": ["src/screens/index.ts"],
+      "@screens/*": ["src/screens/*"],
+      "@config/*": ["configs/*"]
+    },
+    "resolveJsonModule": true
+  },
+  "include": [
+    "tests/**/*.ts",
+    "src/screens/**/*.ts",
+    "src/components/**/*.ts",
+    "src/elements/**/*.ts",
+    "configs/**/*.ts"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "playwright-atf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:report": "playwright show-report reports/playwright-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.3.3"
+  },
+  "dependencies": {
+    "tsconfig-paths": "^4.2.0"
+  }
+}
