@@ -1,6 +1,6 @@
 import { Page, Locator } from "@playwright/test";
-import { Button, Input } from "@elements";
-import { BaseComponent } from "@components";
+import { Button, Input } from "@apps/onliner/elements";
+import { BaseComponent } from "@apps/onliner/components";
 
 export class LoginModal extends BaseComponent {
   readonly usernameInput: Input;

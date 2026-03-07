@@ -1,6 +1,6 @@
 import { Page } from "@playwright/test";
-import { Button } from "@elements";
-import { BaseComponent } from "@components";
+import { Button } from "@apps/onliner/elements";
+import { BaseComponent } from "@apps/onliner/components";
 
 export class Header extends BaseComponent {
   readonly loginButton: Button;

@@ -1,6 +1,6 @@
 import { Page } from "@playwright/test";
-import { BaseComponent } from "@components";
-import { Button } from "@elements";
+import { BaseComponent } from "@apps/onliner/components";
+import { Button } from "@apps/onliner/elements";
 
 export class CookiesPopUp extends BaseComponent {
   readonly acceptCookiesButton: Button;

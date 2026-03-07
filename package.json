@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "playwright test",
+    "test:onliner": "playwright test --project=onliner",
+    "test:easyrpa": "playwright test --project=easyrpa",
     "test:report": "playwright show-report reports/playwright-report"
   },
   "keywords": [],
