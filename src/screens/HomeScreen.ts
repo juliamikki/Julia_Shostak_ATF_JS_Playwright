@@ -1,7 +1,7 @@
 import { Page } from "@playwright/test";
 import { BaseScreen } from "@screens";
 import { Header, CookiesPopUp } from "@components";
-import { env } from "configs/env";
+import { envOnliner } from "@config/env";
 
 export class HomeScreen extends BaseScreen {
   readonly header: Header;
@@ -14,6 +14,6 @@ export class HomeScreen extends BaseScreen {
   }
 
   async goToBaseUrl(): Promise<void> {
-    await this.page.goto(env.baseUrl);
+    await this.page.goto(envOnliner.baseUrl);
   }
 }

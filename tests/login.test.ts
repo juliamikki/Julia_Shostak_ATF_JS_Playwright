@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { HomeScreen } from "@screens";
 import { LoginModal } from "@components";
-import { env } from "configs/env";
+import { envOnliner } from "@config/env";
 
 test.describe("Onliner login", async () => {
   let homeScreen: HomeScreen;
@@ -23,7 +23,7 @@ test.describe("Onliner login", async () => {
   });
 
   test("valid login shows captcha", async ({ page }) => {
-    await loginModal.loginWithCredentials(env.credentials.username,env.credentials.password);
+    await loginModal.loginWithCredentials(envOnliner.credentials.username,envOnliner.credentials.password);
     
     const captchaText = (await page.locator(".auth-form__title_condensed-other").textContent())
     expect(captchaText).toBe("Помогите нам улучшить безопасность");
