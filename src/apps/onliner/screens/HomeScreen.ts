@@ -1,6 +1,6 @@
 import { Page } from "@playwright/test";
-import { BaseScreen } from "@screens";
-import { Header, CookiesPopUp } from "@components";
+import { BaseScreen } from "@apps/onliner/screens";
+import { Header, CookiesPopUp } from "@apps/onliner/components";
 import { envOnliner } from "@config/env";
 
 export class HomeScreen extends BaseScreen {

@@ -22,9 +22,9 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  outputDir: './reports/test-results',
+  outputDir: "./reports/test-results",
   reporter: [
-    ['html', { outputFolder: 'reports/playwright-report', open: 'never' }]
+    ["html", { outputFolder: "reports/playwright-report", open: "never" }],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -40,18 +40,32 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
+    /* ONLINER AUTH SETUP */
     {
-      name: "set cookies",
-      testMatch: "state/setCookies.ts",
+      name: "onliner-setup",
+      testMatch: "onliner/setup/setCookies.ts",
       use: { ...devices["Desktop Chrome"] },
     },
+    /* ONLINER TESTS */
     {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"]
-        , storageState: ".auth/cookies.json" 
+      name: "onliner",
+      testDir: "./tests/onliner",
+      use: {
+        ...devices["Desktop Chrome"],
+        storageState: "tests/onliner/.auth/cookies.json",
+      },
+      dependencies: ["onliner-setup"],
+      workers: 1,
+    },
+
+    /* EASYRPA TESTS */
+    {
+      name: "easyrpa",
+      testDir: "./tests/easyrpa",
+      use: {
+        ...devices["Desktop Chrome"],
       },
       workers: 1,
-      dependencies: ["set cookies"],
     },
 
     // {

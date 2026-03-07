@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { HomeScreen } from "@screens";
-import { LoginModal } from "@components";
+import { HomeScreen } from "@apps/onliner/screens";
+import { LoginModal } from "@apps/onliner/components";
 import { envOnliner } from "@config/env";
 
 test.describe("Onliner login", async () => {
