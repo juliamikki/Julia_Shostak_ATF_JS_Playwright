@@ -25,6 +25,7 @@ export default defineConfig({
   outputDir: "./reports/test-results",
   reporter: [
     ["html", { outputFolder: "reports/playwright-report", open: "never" }],
+    ["allure-playwright", { resultsDir: "reports/allure-results" }],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
