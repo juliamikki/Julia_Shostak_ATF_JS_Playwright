@@ -15,10 +15,16 @@
       "@apps/*": ["src/apps/*"],
       "@core/*": ["src/core/*"],
       "@utils/*": ["src/core/utils/*"],
-      "@config/*": ["configs/*"]
+      "@config/*": ["configs/*"],
+      "@fixtures/*": ["fixtures/*"]
     },
     /* Quality of life */
     "resolveJsonModule": true
   },
-  "include": ["tests/**/*.ts", "src/**/*.ts", "configs/**/*.ts"]
+  "include": [
+    "tests/**/*.ts",
+    "src/**/*.ts",
+    "configs/**/*.ts",
+    "fixtures/**/*.ts"
+  ]
 }
