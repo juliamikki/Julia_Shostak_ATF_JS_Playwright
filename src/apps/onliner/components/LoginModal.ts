@@ -18,18 +18,18 @@ export class LoginModal extends BaseComponent {
     this.errorMessage = this.root.locator(".auth-form__description_error");
   }
 
-  async loginWithCredentials(username: string, password: string): Promise<void> {
+  async loginWithCreds(username: string, password: string): Promise<void> {
     await this.usernameInput.set(username);
     await this.passwordInput.set(password);
     await this.loginButton.click();
   }
 
-  async getErrorMessageText(): Promise<string> {
+  async getErrorMessage(): Promise<string> {
     const text = await this.errorMessage.textContent();
     if (text === null) {
       return "";
     }
-    return text;
+    return text.trim();
     //return (await this.errorMessage.textContent()) ?? '';
     //?? '' -> means that if the result is null or undefined, return '' instead
   }

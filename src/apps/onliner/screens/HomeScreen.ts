@@ -5,7 +5,7 @@ import { envOnliner } from "@config/env";
 
 export class HomeScreen extends BaseScreen {
   readonly header: Header;
-  readonly cookies : CookiesPopUp;
+  readonly cookies: CookiesPopUp;
 
   constructor(page: Page) {
     super(page);
@@ -13,7 +13,7 @@ export class HomeScreen extends BaseScreen {
     this.cookies = new CookiesPopUp(page);
   }
 
-  async goToBaseUrl(): Promise<void> {
-    await this.page.goto(envOnliner.baseUrl);
+  async goToBaseUrl(baseUrl: string): Promise<void> {
+    await this.page.goto(baseUrl);
   }
 }
