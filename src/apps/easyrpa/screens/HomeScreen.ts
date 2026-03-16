@@ -16,6 +16,7 @@ export class HomeScreen extends BaseScreen {
   }
 
   async getHeadingText(): Promise<string> {
-    return (await this.mainHeader.textContent())?.trim() ?? "";
+    const text = await this.mainHeader.textContent();
+    return text?.trim() ?? "";
   }
 }

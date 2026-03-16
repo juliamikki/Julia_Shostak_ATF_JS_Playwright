@@ -1,30 +1,29 @@
 import { Locator } from "@playwright/test";
+import { BaseComponent, Dialog } from "@apps/easyrpa/components";
 import { Checkbox, Button } from "@apps/easyrpa/elements";
-import { Dialog } from "@apps/easyrpa/components";
 
-export class TableRow {
-  private locator: Locator;
+export class TableRow extends BaseComponent {
 
   constructor(locator: Locator) {
-    this.locator = locator;
+    super(locator.page(), locator);
   }
 
   private get checkbox(): Checkbox {
-    return new Checkbox(this.locator.getByRole("checkbox"));
+    return new Checkbox(this.root.getByRole("checkbox"));
   }
 
   private get deleteButton(): Button {
-    return new Button(this.locator.locator(`[aria-label="Delete"] button`));
+    return new Button(this.root.locator(`[aria-label="Delete"] button`));
   }
 
-  async check() : Promise <void> {
-    await this.checkbox.click();
+  async check(): Promise<void> {
+    await this.checkbox.check();
   }
 
   async clickDelete(): Promise<Dialog> {
     await this.deleteButton.click();
 
-    const dialog = new Dialog(this.locator.page());
+    const dialog = new Dialog(this.root.page());
     await dialog.waitForVisible();
     return dialog;
   }

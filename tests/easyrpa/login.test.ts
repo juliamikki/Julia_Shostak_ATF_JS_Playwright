@@ -7,13 +7,13 @@ test.describe("EasyRPA Login Feature", () => {
     await loginScreen.goToBaseUrl(envEasyRPA.baseUrl);
   });
 
-  test.skip("shows error for invalid credentials", async ({ loginScreen }) => {
+  test("shows error for invalid credentials", async ({ loginScreen }) => {
     await loginScreen.loginWithCreds("wrong user", "wrong password");
     await loginScreen.waitForReady();
     expect(await loginScreen.getErrorMessage()).toBe("Invalid credentials for user");
   });
 
-  test.skip("redirects to home screen on valid credentials", async ({ homeScreen }) => {
+  test("redirects to home screen on valid credentials", async ({ homeScreen }) => {
     await homeScreen.waitForReady();
     expect(await homeScreen.getHeadingText()).toEqual("EasyRPA Control Server");
   });

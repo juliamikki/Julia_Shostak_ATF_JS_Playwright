@@ -1,6 +1,7 @@
 import { Page, Locator, expect } from "@playwright/test";
 import { BaseComponent } from "@apps/easyrpa/components";
 import { Button } from "@apps/easyrpa/elements";
+import { AutomationProcessesScreen } from "@apps/easyrpa/screens";
 
 export class NavigationMenu extends BaseComponent {
   constructor(page: Page) {
@@ -23,12 +24,13 @@ export class NavigationMenu extends BaseComponent {
     return this.root.getByRole("link", { name });
   }
 
-  async goToModule(moduleName: string): Promise<void> {
-    await this.module(moduleName).click();
-  }
+  //to be extended:
+  private screens = { "Automation Processes": AutomationProcessesScreen };
 
-  private async isExpanded(): Promise<boolean> {
-    return await this.expandedIcon.isVisible();
+  async goToModule(moduleName: keyof typeof this.screens): Promise<void> {
+    await this.module(moduleName).click();
+    const ScreenClass = this.screens[moduleName];
+    await new ScreenClass(this.page).waitForReady();
   }
 
   async openMenu(): Promise<void> {
@@ -53,5 +55,9 @@ export class NavigationMenu extends BaseComponent {
 
   async waitUntilCollapsed(): Promise<void> {
     await expect(this.collapsedIcon).toBeVisible();
+  }
+
+  private async isExpanded(): Promise<boolean> {
+    return await this.expandedIcon.isVisible();
   }
 }

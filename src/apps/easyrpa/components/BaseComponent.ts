@@ -1,8 +1,8 @@
-import { expect, Page, Locator } from "@playwright/test";
+import { Page, Locator, expect } from "@playwright/test";
 
 export abstract class BaseComponent {
-  protected page: Page;
-  protected root: Locator;
+  protected readonly page: Page;
+  protected readonly root: Locator;
 
   constructor(page: Page, root: Locator) {
     this.page = page;

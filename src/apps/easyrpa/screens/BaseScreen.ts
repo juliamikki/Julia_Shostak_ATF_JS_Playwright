@@ -1,26 +1,22 @@
-import { expect, Page, Locator } from "@playwright/test";
-import { NavigationMenu, Message, Table } from "@apps/easyrpa/components";
+import { Page, Locator, expect } from "@playwright/test";
+import { NavigationMenu, Message, Table, Dialog } from "@apps/easyrpa/components";
 import { Button, Input } from "@apps/easyrpa/elements";
 
 export abstract class BaseScreen {
-  protected page: Page;
-  private spinner: Locator;
-
-  private search: Input;
-  private backToList: Button;
+  protected readonly page: Page;
+  private readonly spinner: Locator;
+  private readonly search: Input;
+  private readonly backToList: Button;
   readonly navigationMenu: NavigationMenu;
   readonly table: Table;
 
   constructor(page: Page) {
     this.page = page;
     this.spinner = this.page.getByRole("progressbar");
-
     this.search = new Input(this.page.locator("#search_field"));
-    this.backToList = new Button(
-      this.page.getByText("Back to list", { exact: true }),
-    );
-    this.table = new Table(page);
+    this.backToList = new Button(this.page.getByTestId("KeyboardBackspaceIcon"));
     this.navigationMenu = new NavigationMenu(page);
+    this.table = new Table(page);
   }
 
   protected button(buttonText: string): Button {
@@ -34,10 +30,6 @@ export abstract class BaseScreen {
   protected inputById(id: string): Input {
     return new Input(this.page.locator(`#${id}`));
   }
-//TODO: ??
-  protected locator(selector: string): Locator {
-    return this.page.locator(selector);
-  }
 
   protected get message(): Message {
     return new Message(this.page);
@@ -45,23 +37,36 @@ export abstract class BaseScreen {
 
   async searchFor(text: string): Promise<void> {
     await this.search.fill(text);
-    await this.spinner.waitFor({ state: "detached" });
+    await this.waitForSpinner();
+    await this.table.expectRowCount(1);
   }
 
   async goBackToList(): Promise<void> {
-    this.backToList.click();
+    await this.backToList.click();
+    await this.waitForReady();
+  }
+
+  async clickDelete(): Promise<Dialog> {
+    await this.button("Delete").click();
+    const dialog = new Dialog(this.page);
+    await dialog.waitForVisible();
+    return dialog;
   }
 
   async waitForReady(): Promise<void> {
-    //await this.page.waitForLoadState("networkidle");
-    await this.spinner.waitFor({ state: "detached" });
+    await this.page.waitForLoadState("load");
+    await this.waitForSpinner();
     await this.waitForKeyElements();
   }
 
   protected async waitForKeyElements(): Promise<void> {}
 
-  async waitForHeader(text: string): Promise<void> {
+  protected async waitForHeader(text: string): Promise<void> {
     const header = this.page.getByRole("heading", { name: text, level: 5 });
     await expect(header).toBeVisible();
+  }
+
+  private async waitForSpinner(): Promise<void> {
+    await this.spinner.waitFor({ state: "detached" });
   }
 }

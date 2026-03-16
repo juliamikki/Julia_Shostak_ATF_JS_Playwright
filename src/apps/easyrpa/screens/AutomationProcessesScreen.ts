@@ -1,6 +1,6 @@
-import { Page, expect } from "@playwright/test";
+import { Page } from "@playwright/test";
 import { BaseScreen } from "@apps/easyrpa/screens";
-import { Dialog, Message } from "@apps/easyrpa/components";
+import { Dialog, Message, TableRow } from "@apps/easyrpa/components";
 
 export type AutomationProcessData = {
   name: string;
@@ -19,7 +19,7 @@ export class AutomationProcessesScreen extends BaseScreen {
     await this.waitForHeader("Automation Processes");
   }
 
-  async createAutomationProcess(data: AutomationProcessData) {
+  async createAutomationProcess(data: AutomationProcessData): Promise<void> {
     await this.button("Create New").click();
     await this.waitForHeader("New Automation Process");
 
@@ -30,16 +30,47 @@ export class AutomationProcessesScreen extends BaseScreen {
     await this.input("Version Id").fill(data.versionId);
 
     await this.button("Create New").click();
-    await this.message.expectTextAndClose(Message.Contents.apCreated)
+    await this.message.expectTextAndClose(Message.Contents.apCreated);
   }
 
-  async deleteAutomationProcess(data: AutomationProcessData) {
-    await this.searchFor(data.name);
-    await this.table.getRowByCellValue(data.name).check();
-    const dialog = await this.table.getRowByCellValue(data.name).clickDelete();
+  private async deleteInPageHeader(): Promise<Dialog> {
+    return await this.clickDelete();
+  }
+
+  private async deleteInRow(row: TableRow): Promise<Dialog> {
+    return await row.clickDelete();
+  }
+
+  private async confirmDeletion(dialog : Dialog): Promise<void> {
     await dialog.expectContent(Dialog.Contents.deleteHeading, Dialog.Contents.deleteMessage);
     await dialog.confirmDelete();
     await this.message.expectTextAndClose(Message.Contents.apDeleted);
-    await this.table.expectToBeEmpty();
+  }
+
+  async deleteAPInRow(data: AutomationProcessData): Promise<void> {
+    const row = this.table.getRowByCellValue(data.name);
+    await row.check();
+
+    const dialog = await this.deleteInRow(row);
+    await this.confirmDeletion(dialog);
+  }
+
+  async deleteAPviaSearchAndCheckFirst(data: AutomationProcessData): Promise<void> {
+    await this.searchFor(data.name);
+
+    const row = this.table.getRowByIndex(0);
+    await row.check();
+
+    const dialog = await this.deleteInRow(row);
+    await this.confirmDeletion(dialog);
+  }
+
+  async deleteAPviaSearchAndCheckAll(data: AutomationProcessData): Promise<void> {
+    await this.searchFor(data.name);
+
+    await this.table.getHeaderRow().check();
+
+    const dialog = await this.deleteInPageHeader();
+    await this.confirmDeletion(dialog);
   }
 }

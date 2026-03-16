@@ -1,12 +1,7 @@
-import { Locator } from "@playwright/test";
+import { BaseElement } from "@apps/easyrpa/elements";
 
-export class Input {
-  private locator: Locator;
-
-  constructor(locator: Locator) {
-    this.locator = locator;
-  }
-
+export class Input extends BaseElement {
+  
   async fill(value: string): Promise<void> {
     await this.locator.fill(value);
   }

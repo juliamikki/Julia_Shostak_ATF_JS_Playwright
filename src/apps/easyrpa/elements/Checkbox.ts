@@ -1,15 +1,16 @@
-import { Locator } from "@playwright/test";
+import { BaseElement } from "@apps/easyrpa/elements";
 
-export class Checkbox {
-    //TODO: unify click for Checkbox and Button 
-    // (do I need separate classes for them?)
-  private locator: Locator;
-
-  constructor(locator: Locator) {
-    this.locator = locator;
+export class Checkbox extends BaseElement {
+  
+  async check(): Promise<void> {
+    if (!(await this.locator.isChecked())) {
+      await this.click();
+    }
   }
 
-  async click(): Promise<void> {
-    await this.locator.click();
+  async uncheck(): Promise<void> {
+    if (await this.locator.isChecked()) {
+      await this.click();
+    }
   }
 }
