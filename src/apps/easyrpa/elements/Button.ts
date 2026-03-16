@@ -12,7 +12,7 @@ export class Button {
   // }
 
   async click(): Promise<void> {
-    await this.locator.waitFor({ state: "visible" });
+    //await this.locator.waitFor({ state: "visible" });
     await this.locator.click();
   }
 

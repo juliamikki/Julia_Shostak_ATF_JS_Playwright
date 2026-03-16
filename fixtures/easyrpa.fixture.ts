@@ -1,21 +1,33 @@
 import { test as base } from "@playwright/test";
 import { LoginScreen, HomeScreen, AutomationProcessesScreen } from "@apps/easyrpa/screens";
+import { envEasyRPA } from "@config/env";
 
 type EasyRPAFixtures = {
-  loginScreen: LoginScreen;
+  loginScreen : LoginScreen;
   homeScreen: HomeScreen;
   automationProcessesScreen: AutomationProcessesScreen;
 };
 
 export const test = base.extend<EasyRPAFixtures>({
+
   loginScreen: async ({ page }, use) => {
-    await use(new LoginScreen(page));
+    const login = new LoginScreen(page);
+    await use(login); 
   },
+
   homeScreen: async ({ page }, use) => {
-    await use(new HomeScreen(page));
+    const loginScreen = new LoginScreen(page);
+    await loginScreen.goToBaseUrl(envEasyRPA.baseUrl);
+    await loginScreen.loginWithCreds(envEasyRPA.credentials.username, envEasyRPA.credentials.password);
+
+    const homeScreen = new HomeScreen(page);
+    await homeScreen.waitForReady();
+    await use(homeScreen);
   },
+
   automationProcessesScreen: async ({ page }, use) => {
-    await use(new AutomationProcessesScreen(page));
+    const apScreen = new AutomationProcessesScreen(page)
+    await use(apScreen);
   },
 });
 

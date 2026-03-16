@@ -1,39 +1,57 @@
-import { Page, expect } from "@playwright/test";
+import { Page, Locator, expect } from "@playwright/test";
 import { BaseComponent } from "@apps/easyrpa/components";
 import { Button } from "@apps/easyrpa/elements";
 
 export class NavigationMenu extends BaseComponent {
-  readonly arrowIcon: Button;
-
   constructor(page: Page) {
-    const root = page.locator(".MuiDrawer-paper");
-    super(page, root);
+    super(page, page.locator(".MuiDrawer-paper"));
+  }
 
-    this.arrowIcon = new Button(this.root.locator("#arrow_icon"));
+  private get arrow(): Button {
+    return new Button(this.root.locator("#arrow_icon"));
+  }
+
+  private get expandedIcon(): Locator {
+    return this.root.getByTestId("ChevronLeftIcon");
+  }
+
+  private get collapsedIcon(): Locator {
+    return this.root.getByTestId("ChevronRightIcon");
+  }
+
+  private module(name: string): Locator {
+    return this.root.getByRole("link", { name });
+  }
+
+  async goToModule(moduleName: string): Promise<void> {
+    await this.module(moduleName).click();
+  }
+
+  private async isExpanded(): Promise<boolean> {
+    return await this.expandedIcon.isVisible();
   }
 
   async openMenu(): Promise<void> {
-    await this.arrowIcon.click();
-    await this.waitUntilExpanded();
+    await this.waitForVisible();
+    if (!(await this.isExpanded())) {
+      await this.arrow.click();
+      await this.waitUntilExpanded();
+    }
+  }
+
+  async closeMenu(): Promise<void> {
+    await this.waitForVisible();
+    if (await this.isExpanded()) {
+      await this.arrow.click();
+      await this.waitUntilCollapsed();
+    }
   }
 
   async waitUntilExpanded(): Promise<void> {
-    await expect(this.root.locator('[data-testid="ChevronLeftIcon"]')).toBeVisible();
+    await expect(this.expandedIcon).toBeVisible();
   }
 
   async waitUntilCollapsed(): Promise<void> {
-    await expect(this.root.locator('[data-testid="ChevronRightIcon"]')).toBeVisible();
-  }
-
-  async goToModule(moduleName : string) {
-    await this.root.getByRole('link', { name: moduleName }).click();
+    await expect(this.collapsedIcon).toBeVisible();
   }
 }
-
-// async isMenuExpanded() : Promise<boolean> {
-//   return await this.arrowIcon.locator.locator('[data-testid="ChevronLeftIcon"]').isVisible();
-// }
-
-//  async isMenuCollapsed() : Promise<boolean> {
-//   return await this.arrowIcon.locator.locator('[data-testid="ChevronRightIcon"]').isVisible();
-// }

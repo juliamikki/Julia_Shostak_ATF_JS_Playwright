@@ -9,7 +9,8 @@ export abstract class BaseComponent {
     this.root = root;
   }
 
-  async waitForVisible(): Promise<void> {
-    await expect(this.root).toBeVisible();
+  //customizable wait for component:
+  async waitForVisible(timeout = 5000): Promise<void> {
+    await expect(this.root).toBeVisible({ timeout });
   }
 }

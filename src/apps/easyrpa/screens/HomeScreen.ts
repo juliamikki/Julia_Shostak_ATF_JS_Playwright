@@ -1,4 +1,4 @@
-import { Page } from "@playwright/test";
+import { Page, Locator, expect } from "@playwright/test";
 import { BaseScreen } from "@apps/easyrpa/screens";
 
 export class HomeScreen extends BaseScreen {
@@ -6,10 +6,16 @@ export class HomeScreen extends BaseScreen {
     super(page);
   }
 
-  async waitForKeyElements(): Promise<void> {
+  private get mainHeader(): Locator {
+    return this.page.getByText("EasyRPA Control Server");
+  }
+
+  protected async waitForKeyElements(): Promise<void> {
     await this.navigationMenu.waitForVisible();
-    await this.page.locator("#root .MuiGrid-item").first().waitFor({ state: "visible" });
-    const headerTextLocator = this.page.locator('p', { hasText: 'EasyRPA Control Server' });
-    await headerTextLocator.waitFor({ state: 'visible'});
+    await expect(this.mainHeader).toBeVisible();
+  }
+
+  async getHeadingText(): Promise<string> {
+    return (await this.mainHeader.textContent())?.trim() ?? "";
   }
 }

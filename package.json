@@ -6,6 +6,7 @@
   "scripts": {
     "test:onliner": "playwright test --project=onliner",
     "test:easyrpa": "playwright test --project=easyrpa",
+    "test:easyrpa:debug": "playwright test --project=easyrpa --debug",
     "test:report": "playwright show-report reports/playwright-report",
     "allure:serve": "allure serve reports/allure-results"
   },
