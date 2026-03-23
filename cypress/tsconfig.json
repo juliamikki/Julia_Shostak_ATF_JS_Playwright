@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "lib": ["ES6", "DOM"],
+    "types": ["cypress"],
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+
+    "baseUrl": "src",
+    "paths": {
+      "@elements": ["elements/index.ts"], 
+      "@elements/*": ["elements/*"],
+      "@components": ["components/index.ts"],
+      "@components/*": ["components/*"],
+      "@screens": ["screens/index.ts"],
+      "@screens/*": ["screens/*"]
+    }
+  },
+  "include": ["src/**/*.ts", "tests/**/*.ts"],
+  "exclude": ["node_modules"]
+}
