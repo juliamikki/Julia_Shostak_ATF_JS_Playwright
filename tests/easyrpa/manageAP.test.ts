@@ -8,6 +8,7 @@ test.describe("Manage automation processes (AP)", () => {
       await homeScreen.navigationMenu.goToModule("Automation Processes");
       await automationProcessesScreen.createAutomationProcess(apData.newAP);
       await automationProcessesScreen.goBackToList();
+      //TODO: should the assert be here?
     },
   );
 
@@ -25,9 +26,10 @@ test.describe("Manage automation processes (AP)", () => {
     await automationProcessesScreen.table.expectToBeEmpty();
   });
 
-  test("should delete AP via search name, check all, delete in page heaader", async({ homeScreen, automationProcessesScreen }) => {
+  test("should delete AP via search name, check all, delete in page header", async({ homeScreen, automationProcessesScreen }) => {
     await homeScreen.navigationMenu.openMenu();
     await homeScreen.navigationMenu.goToModule("Automation Processes");
+    //TODO: is it ok to have complicated methods like this in PO? or better to move the logic in test?
     await automationProcessesScreen.deleteAPviaSearchAndCheckAll(apData.newAP);
     await automationProcessesScreen.table.expectToBeEmpty();
   });

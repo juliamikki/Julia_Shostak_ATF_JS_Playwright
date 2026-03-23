@@ -6,7 +6,7 @@ export class LoginScreen extends BaseScreen {
     super(page);
   }
 
-  private get errorMessage(): Locator {
+  public get errorMessage(): Locator {
     return this.page.locator(".error-block-text");
   }
 
@@ -18,10 +18,5 @@ export class LoginScreen extends BaseScreen {
     await this.inputById("input_username").fill(username);
     await this.inputById("input_password").fill(password);
     await this.button("Log In").click();
-  }
-
-  async getErrorMessage(): Promise<string> {
-    const message = await this.errorMessage.textContent();
-    return message?.trim() ?? "";
   }
 }

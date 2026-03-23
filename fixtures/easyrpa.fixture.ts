@@ -11,8 +11,9 @@ type EasyRPAFixtures = {
 export const test = base.extend<EasyRPAFixtures>({
 
   loginScreen: async ({ page }, use) => {
-    const login = new LoginScreen(page);
-    await use(login); 
+    const loginScreen = new LoginScreen(page);
+    await loginScreen.goToBaseUrl(envEasyRPA.baseUrl);
+    await use(loginScreen); 
   },
 
   homeScreen: async ({ page }, use) => {

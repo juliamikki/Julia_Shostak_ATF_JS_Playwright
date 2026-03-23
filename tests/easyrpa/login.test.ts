@@ -1,20 +1,15 @@
 import { test, expect } from "@fixtures/easyrpa.fixture";
-import { envEasyRPA } from "@config/env";
 
 test.describe("EasyRPA Login Feature", () => {
 
-  test.beforeEach(async ({ loginScreen }) => {
-    await loginScreen.goToBaseUrl(envEasyRPA.baseUrl);
-  });
-
   test("shows error for invalid credentials", async ({ loginScreen }) => {
     await loginScreen.loginWithCreds("wrong user", "wrong password");
-    await loginScreen.waitForReady();
-    expect(await loginScreen.getErrorMessage()).toBe("Invalid credentials for user");
+    await expect(loginScreen.errorMessage).toHaveText("Invalid credentials for user");
   });
 
+  //TODO: ask about fixtures: is that fine to pass here the homescreen, 
+  // or in such a concise method the logic should be directly in the test? 
   test("redirects to home screen on valid credentials", async ({ homeScreen }) => {
-    await homeScreen.waitForReady();
-    expect(await homeScreen.getHeadingText()).toEqual("EasyRPA Control Server");
+    await expect(homeScreen.mainHeader).toHaveText("EasyRPA Control Server");
   });
 });

@@ -6,17 +6,12 @@ export class HomeScreen extends BaseScreen {
     super(page);
   }
 
-  private get mainHeader(): Locator {
+  public get mainHeader(): Locator {
     return this.page.getByText("EasyRPA Control Server");
   }
 
   protected async waitForKeyElements(): Promise<void> {
     await this.navigationMenu.waitForVisible();
     await expect(this.mainHeader).toBeVisible();
-  }
-
-  async getHeadingText(): Promise<string> {
-    const text = await this.mainHeader.textContent();
-    return text?.trim() ?? "";
   }
 }
