@@ -1,9 +1,23 @@
 {
   "compilerOptions": {
-    "moduleResolution": "node",
+    "target": "ES2022",
     "module": "ESNext",
-    "target": "es2022",
-    "lib": ["es2022", "dom"],
+    "moduleResolution": "bundler",
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "#components": ["src/components/index.ts"],
+      "#components/*": ["src/components/*.ts"],
+      "#elements": ["src/elements/index.ts"],
+      "#elements/*": ["src/elements/*.ts"],
+      "#screens": ["src/screens/index.ts"],
+      "#screens/*": ["src/screens/*.ts"],
+      "#support/*": ["src/support/*.ts"],
+      "#config/*": ["configs/*.ts"]
+    },
+    "lib": ["ES2022", "DOM"],
     "types": [
       "node",
       "mocha",
@@ -12,14 +26,9 @@
       "@wdio/mocha-framework"
     ],
     "skipLibCheck": true,
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noEmit": true
   },
-  "include": ["tests/**/*.ts", "src/screens/**/*.ts", "wdio.conf.ts"]
+  "include": ["wdio.conf.ts", "configs/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]
 }
