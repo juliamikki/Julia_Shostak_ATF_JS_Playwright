@@ -10,16 +10,13 @@ export abstract class BaseScreen {
 
   constructor() {
     this.search = new Input(() => $("#search_field"));
-    this.backToList = new Button(() => $("//div[*[@data-testid='KeyboardBackspaceIcon']]"));
+    //this.backToList = new Button(() => $("//div[*[@data-testid='KeyboardBackspaceIcon']]"));
+    this.backToList = new Button(() => $("[data-testid='KeyboardBackspaceIcon']"));
     this.navigationMenu = new NavigationMenu();
     this.table = new Table();
   }
 
   protected button(buttonText: string): Button {
-    if (buttonText === "Log In") {
-      return new Button(() => $("button[type='submit']"));
-    }
-
     return new Button(() => $(`//button[p[text()='${buttonText}'] or text()='${buttonText}']`));
   }
 

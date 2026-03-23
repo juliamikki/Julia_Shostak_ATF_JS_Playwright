@@ -2,7 +2,12 @@ import { browser } from "@wdio/globals";
 import { BaseScreen } from "#screens";
 
 export class LoginScreen extends BaseScreen {
-  private get errorMessage() {
+
+  private get loginButton()  {
+    return $("button[type='submit']");
+  }
+  
+  public get errorMessage() {
     return $(".error-block-text");
   }
 
@@ -13,11 +18,6 @@ export class LoginScreen extends BaseScreen {
   async loginWithCreds(username: string, password: string): Promise<void> {
     await this.inputById("input_username").fill(username);
     await this.inputById("input_password").fill(password);
-    await this.button("Log In").click();
-  }
-
-  async getErrorMessage(): Promise<string> {
-    const message = await this.errorMessage.getText();
-    return message.trim();
+    await this.loginButton.click();
   }
 }
