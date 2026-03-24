@@ -1,31 +1,31 @@
-import { Page, Locator, expect } from "@playwright/test";
-import { BaseComponent } from "@apps/easyrpa/components";
-import { Button } from "@apps/easyrpa/elements";
-import { AutomationProcessesScreen } from "@apps/easyrpa/screens";
+import { Page, Locator, expect } from '@playwright/test';
+import { BaseComponent } from '@apps/easyrpa/components';
+import { Button } from '@apps/easyrpa/elements';
+import { AutomationProcessesScreen } from '@apps/easyrpa/screens';
 
 export class NavigationMenu extends BaseComponent {
   constructor(page: Page) {
-    super(page, page.locator(".MuiDrawer-paper"));
+    super(page, page.locator('.MuiDrawer-paper'));
   }
 
   private get arrow(): Button {
-    return new Button(this.root.locator("#arrow_icon"));
+    return new Button(this.root.locator('#arrow_icon'));
   }
 
   private get expandedIcon(): Locator {
-    return this.root.getByTestId("ChevronLeftIcon");
+    return this.root.getByTestId('ChevronLeftIcon');
   }
 
   private get collapsedIcon(): Locator {
-    return this.root.getByTestId("ChevronRightIcon");
+    return this.root.getByTestId('ChevronRightIcon');
   }
 
   private module(name: string): Locator {
-    return this.root.getByRole("link", { name });
+    return this.root.getByRole('link', { name });
   }
 
   //to be extended:
-  private screens = { "Automation Processes": AutomationProcessesScreen };
+  private screens = { 'Automation Processes': AutomationProcessesScreen };
 
   async goToModule(moduleName: keyof typeof this.screens): Promise<void> {
     await this.module(moduleName).click();

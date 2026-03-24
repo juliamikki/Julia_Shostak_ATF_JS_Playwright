@@ -1,11 +1,6 @@
-import { Page, Locator, expect } from "@playwright/test";
-import {
-  NavigationMenu,
-  Message,
-  Table,
-  Dialog,
-} from "@apps/easyrpa/components";
-import { Button, Input } from "@apps/easyrpa/elements";
+import { Page, Locator, expect } from '@playwright/test';
+import { NavigationMenu, Message, Table, Dialog } from '@apps/easyrpa/components';
+import { Button, Input } from '@apps/easyrpa/elements';
 
 export abstract class BaseScreen {
   protected readonly page: Page;
@@ -18,15 +13,15 @@ export abstract class BaseScreen {
 
   constructor(page: Page) {
     this.page = page;
-    this.spinner = this.page.getByRole("progressbar");
-    this.search = new Input(this.page.locator("#search_field"));
-    this.backToList = new Button(this.page.getByTestId("KeyboardBackspaceIcon"));
+    this.spinner = this.page.getByRole('progressbar');
+    this.search = new Input(this.page.locator('#search_field'));
+    this.backToList = new Button(this.page.getByTestId('KeyboardBackspaceIcon'));
     this.navigationMenu = new NavigationMenu(page);
     this.table = new Table(page);
   }
 
   protected button(buttonText: string): Button {
-    return new Button(this.page.getByRole("button", { name: buttonText }));
+    return new Button(this.page.getByRole('button', { name: buttonText }));
   }
 
   protected input(label: string): Input {
@@ -43,7 +38,7 @@ export abstract class BaseScreen {
 
   async searchFor(text: string): Promise<void> {
     await this.search.fill(text);
-    await this.spinner.waitFor({ state: "detached" });
+    await this.spinner.waitFor({ state: 'detached' });
     await this.table.expectRowCount(1);
   }
 
@@ -53,22 +48,22 @@ export abstract class BaseScreen {
   }
 
   async clickDelete(): Promise<Dialog> {
-    await this.button("Delete").click();
+    await this.button('Delete').click();
     const dialog = new Dialog(this.page);
     await dialog.waitForVisible();
     return dialog;
   }
 
   async waitForReady(): Promise<void> {
-    await this.page.waitForLoadState("load");
-    await this.spinner.waitFor({ state: "detached" });
+    await this.page.waitForLoadState('load');
+    await this.spinner.waitFor({ state: 'detached' });
     if (this.header) {
       await this.expectHeader(this.header);
     }
   }
 
   protected async expectHeader(text: string): Promise<void> {
-    const header = this.page.getByRole("heading", { name: text, level: 5 });
+    const header = this.page.getByRole('heading', { name: text, level: 5 });
     await expect(header).toBeVisible();
   }
 }

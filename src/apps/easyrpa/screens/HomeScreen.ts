@@ -1,5 +1,5 @@
-import { Page, Locator } from "@playwright/test";
-import { BaseScreen } from "@apps/easyrpa/screens";
+import { Page, Locator } from '@playwright/test';
+import { BaseScreen } from '@apps/easyrpa/screens';
 
 export class HomeScreen extends BaseScreen {
   constructor(page: Page) {
@@ -7,6 +7,6 @@ export class HomeScreen extends BaseScreen {
   }
 
   public get mainHeader(): Locator {
-    return this.page.getByText("EasyRPA Control Server");
+    return this.page.getByText('EasyRPA Control Server');
   }
 }

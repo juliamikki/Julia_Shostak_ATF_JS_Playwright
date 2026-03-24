@@ -1,15 +1,14 @@
-import { Locator } from "@playwright/test";
-import { BaseComponent, Dialog } from "@apps/easyrpa/components";
-import { Checkbox, Button } from "@apps/easyrpa/elements";
+import { Locator } from '@playwright/test';
+import { BaseComponent, Dialog } from '@apps/easyrpa/components';
+import { Checkbox, Button } from '@apps/easyrpa/elements';
 
 export class TableRow extends BaseComponent {
-
   constructor(locator: Locator) {
     super(locator.page(), locator);
   }
 
   private get checkbox(): Checkbox {
-    return new Checkbox(this.root.getByRole("checkbox"));
+    return new Checkbox(this.root.getByRole('checkbox'));
   }
 
   private get deleteButton(): Button {

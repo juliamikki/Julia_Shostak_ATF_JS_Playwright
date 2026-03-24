@@ -1,5 +1,5 @@
-import { Page, Locator } from "@playwright/test";
-import { BaseScreen } from "@apps/easyrpa/screens";
+import { Page, Locator } from '@playwright/test';
+import { BaseScreen } from '@apps/easyrpa/screens';
 
 export class LoginScreen extends BaseScreen {
   constructor(page: Page) {
@@ -7,7 +7,7 @@ export class LoginScreen extends BaseScreen {
   }
 
   public get errorMessage(): Locator {
-    return this.page.locator(".error-block-text");
+    return this.page.locator('.error-block-text');
   }
 
   async goToBaseUrl(baseUrl: string): Promise<void> {
@@ -15,9 +15,9 @@ export class LoginScreen extends BaseScreen {
   }
 
   async loginWithCreds(username: string, password: string): Promise<void> {
-    await this.inputById("input_username").fill(username);
-    await this.inputById("input_password").fill(password);
-    await this.button("Log In").click();
+    await this.inputById('input_username').fill(username);
+    await this.inputById('input_password').fill(password);
+    await this.button('Log In').click();
     await this.waitForReady();
   }
 }

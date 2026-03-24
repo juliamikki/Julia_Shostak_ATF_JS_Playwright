@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from "@playwright/test";
+import { Page, Locator, expect } from '@playwright/test';
 
 export abstract class BaseComponent {
   protected readonly page: Page;

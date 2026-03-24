@@ -2,7 +2,7 @@ import { test } from '@fixtures/easyrpa.fixture';
 import apData from './test-data/automationProcess.json' assert { type: 'json' };
 
 test.describe('Manage automation processes (AP)', () => {
-  test.beforeEach('create a new AP', async ({ homeScreen, apScreen, page }) => {
+  test.beforeEach('create a new AP', async ({ homeScreen, apScreen }) => {
     await homeScreen.navigationMenu.openMenu();
     await homeScreen.navigationMenu.goToModule('Automation Processes');
     await apScreen.createAutomationProcess(apData.newAP);

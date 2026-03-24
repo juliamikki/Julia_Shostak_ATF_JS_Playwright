@@ -1,7 +1,6 @@
-import { Locator } from "@playwright/test";
+import { Locator } from '@playwright/test';
 
 export abstract class BaseElement {
-    
   protected readonly locator: Locator;
 
   constructor(locator: Locator) {
