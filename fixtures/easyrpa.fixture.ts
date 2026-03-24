@@ -3,18 +3,11 @@ import { LoginScreen, HomeScreen, AutomationProcessesScreen } from "@apps/easyrp
 import { envEasyRPA } from "@config/env";
 
 type EasyRPAFixtures = {
-  loginScreen : LoginScreen;
   homeScreen: HomeScreen;
-  automationProcessesScreen: AutomationProcessesScreen;
+  apScreen: AutomationProcessesScreen;
 };
 
 export const test = base.extend<EasyRPAFixtures>({
-
-  loginScreen: async ({ page }, use) => {
-    const loginScreen = new LoginScreen(page);
-    await loginScreen.goToBaseUrl(envEasyRPA.baseUrl);
-    await use(loginScreen); 
-  },
 
   homeScreen: async ({ page }, use) => {
     const loginScreen = new LoginScreen(page);
@@ -22,11 +15,10 @@ export const test = base.extend<EasyRPAFixtures>({
     await loginScreen.loginWithCreds(envEasyRPA.credentials.username, envEasyRPA.credentials.password);
 
     const homeScreen = new HomeScreen(page);
-    await homeScreen.waitForReady();
     await use(homeScreen);
   },
 
-  automationProcessesScreen: async ({ page }, use) => {
+  apScreen: async ({ page }, use) => {
     const apScreen = new AutomationProcessesScreen(page)
     await use(apScreen);
   },

@@ -1,5 +1,10 @@
 import { Page, Locator, expect } from "@playwright/test";
-import { NavigationMenu, Message, Table, Dialog } from "@apps/easyrpa/components";
+import {
+  NavigationMenu,
+  Message,
+  Table,
+  Dialog,
+} from "@apps/easyrpa/components";
 import { Button, Input } from "@apps/easyrpa/elements";
 
 export abstract class BaseScreen {
@@ -9,6 +14,7 @@ export abstract class BaseScreen {
   private readonly backToList: Button;
   readonly navigationMenu: NavigationMenu;
   readonly table: Table;
+  protected header?: string;
 
   constructor(page: Page) {
     this.page = page;
@@ -37,7 +43,7 @@ export abstract class BaseScreen {
 
   async searchFor(text: string): Promise<void> {
     await this.search.fill(text);
-    await this.waitForSpinner();
+    await this.spinner.waitFor({ state: "detached" });
     await this.table.expectRowCount(1);
   }
 
@@ -55,18 +61,14 @@ export abstract class BaseScreen {
 
   async waitForReady(): Promise<void> {
     await this.page.waitForLoadState("load");
-    await this.waitForSpinner();
-    await this.waitForKeyElements();
+    await this.spinner.waitFor({ state: "detached" });
+    if (this.header) {
+      await this.expectHeader(this.header);
+    }
   }
 
-  protected async waitForKeyElements(): Promise<void> {}
-
-  protected async waitForHeader(text: string): Promise<void> {
+  protected async expectHeader(text: string): Promise<void> {
     const header = this.page.getByRole("heading", { name: text, level: 5 });
     await expect(header).toBeVisible();
-  }
-
-  private async waitForSpinner(): Promise<void> {
-    await this.spinner.waitFor({ state: "detached" });
   }
 }

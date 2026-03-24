@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from "@playwright/test";
+import { Page, Locator } from "@playwright/test";
 import { BaseScreen } from "@apps/easyrpa/screens";
 
 export class HomeScreen extends BaseScreen {
@@ -8,10 +8,5 @@ export class HomeScreen extends BaseScreen {
 
   public get mainHeader(): Locator {
     return this.page.getByText("EasyRPA Control Server");
-  }
-
-  protected async waitForKeyElements(): Promise<void> {
-    await this.navigationMenu.waitForVisible();
-    await expect(this.mainHeader).toBeVisible();
   }
 }

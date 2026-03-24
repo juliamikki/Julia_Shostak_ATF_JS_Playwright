@@ -18,5 +18,6 @@ export class LoginScreen extends BaseScreen {
     await this.inputById("input_username").fill(username);
     await this.inputById("input_password").fill(password);
     await this.button("Log In").click();
+    await this.waitForReady();
   }
 }

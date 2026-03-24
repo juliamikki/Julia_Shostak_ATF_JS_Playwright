@@ -12,24 +12,20 @@ export class Dialog extends BaseComponent {
     super(page, page.getByRole("dialog"));
   }
 
-  private button(name: string): Button {
-    return new Button(this.root.getByRole("button", { name }));
-  }
-
   private heading(text: string): Locator {
     return this.root.getByRole("heading", { name: text });
   }
 
-  private message(text: string): Locator  {
+  private message(text: string): Locator {
     return this.root.getByText(text);
   }
 
-  async confirmDelete(): Promise<void> {
-    await this.button("Delete").click();
+  private button(name: string): Button {
+    return new Button(this.root.getByRole("button", { name }))
   }
 
-  async cancel(): Promise<void> {
-    await this.button("Cancel").click();
+  async clickButton(name: string): Promise<void> {
+    await this.button(name).click();
   }
 
   async expectContent(heading: string, message: string): Promise<void> {

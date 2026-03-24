@@ -17,9 +17,7 @@
   "type": "module",
   "devDependencies": {
     "@playwright/test": "^1.58.2",
-    "@types/node": "^25.3.3"
-  },
-  "dependencies": {
+    "@types/node": "^25.3.3",
     "allure-playwright": "^3.6.0",
     "tsconfig-paths": "^4.2.0"
   }

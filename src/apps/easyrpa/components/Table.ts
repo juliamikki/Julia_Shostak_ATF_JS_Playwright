@@ -1,21 +1,27 @@
-import { Page, Locator, expect } from "@playwright/test";
-import { BaseComponent, TableRow } from "@apps/easyrpa/components";
+import { Page, Locator, expect } from '@playwright/test';
+import { BaseComponent, TableRow } from '@apps/easyrpa/components';
 
 export class Table extends BaseComponent {
   private readonly spinner: Locator;
 
   constructor(page: Page) {
-    const root = page.locator(".MuiTable-stickyHeader");
+    const root = page.locator('.MuiTable-stickyHeader');
     super(page, root);
-    this.spinner = this.page.getByRole("progressbar");
+    this.spinner = this.page.getByRole('progressbar');
   }
 
   private get rows(): Locator {
-    return this.root.locator("tbody").getByRole("row");
+    return this.root.locator('tbody').getByRole('row');
+  }
+
+  private rowLocatorByCellValue(value: string): Locator {
+    return this.rows.filter({
+      has: this.page.getByRole('cell', { name: value, exact: true })
+    });
   }
 
   getHeaderRow(): TableRow {
-    return new TableRow(this.root.locator("thead"));
+    return new TableRow(this.root.locator('thead'));
   }
 
   getRowByIndex(index: number): TableRow {
@@ -24,28 +30,23 @@ export class Table extends BaseComponent {
   }
 
   getRowByCellValue(value: string): TableRow {
-    const row = this.rows.filter({
-      has: this.page.getByRole("cell", { name: value, exact: true }),
-    });
-    return new TableRow(row);
+    return new TableRow(this.rowLocatorByCellValue(value));
   }
 
-  async waitForTable(): Promise<void> {
-    await this.spinner.waitFor({ state: "detached" });
-    await expect(this.root.locator("tbody")).toBeVisible();
-  }
-
-  async expectToBeEmpty(): Promise<void> {
-    this.expectRowCount(0);
-  }
-
-  async expectRowCount(count: number): Promise<void> {
-    const dataRows = this.rows.filter({ visible: true });
-    await expect(dataRows).toHaveCount(count);
+  async expectRowToExist(value: string): Promise<void> {
+    await expect(this.rowLocatorByCellValue(value)).toHaveCount(1);
   }
 
   async expectRowNotToExist(value: string): Promise<void> {
-    const row = this.rows.filter({ has: this.page.getByRole("cell", { name: value, exact: true })});
-    await expect(row).toHaveCount(0);
+    await expect(this.rowLocatorByCellValue(value)).toHaveCount(0);
+  }
+
+  async expectRowCount(count: number): Promise<void> {
+    const visibleRows = this.rows.filter({ visible: true });
+    await expect(visibleRows).toHaveCount(count);
+  }
+
+  async expectToBeEmpty(): Promise<void> {
+    await this.expectRowCount(0);
   }
 }
