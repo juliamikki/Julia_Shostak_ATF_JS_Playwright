@@ -2,6 +2,7 @@
 # Playwright
 node_modules/
 test-results/
+allure-results/
 reports/*
 .auth/
 .github/

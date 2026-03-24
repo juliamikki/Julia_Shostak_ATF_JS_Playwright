@@ -13,6 +13,12 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
   testDir: "./tests",
+  timeout: 40000, //test timeout - 30s by default
+
+  expect: {
+    timeout: 20000, //expect timeout - 5s by default
+  },
+
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -25,6 +31,7 @@ export default defineConfig({
   outputDir: "./reports/test-results",
   reporter: [
     ["html", { outputFolder: "reports/playwright-report", open: "never" }],
+    ["allure-playwright", { resultsDir: "reports/allure-results" }],
   ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
@@ -46,6 +53,7 @@ export default defineConfig({
       testMatch: "onliner/setup/setCookies.ts",
       use: { ...devices["Desktop Chrome"] },
     },
+
     /* ONLINER TESTS */
     {
       name: "onliner",
@@ -60,42 +68,49 @@ export default defineConfig({
 
     /* EASYRPA TESTS */
     {
-      name: "easyrpa",
+      name: "easyrpa-chromium",
       testDir: "./tests/easyrpa",
       use: {
+        browserName: "chromium",
+        channel: "chrome",
         ...devices["Desktop Chrome"],
       },
       workers: 1,
     },
 
     // {
-    //   name: 'firefox',
-    //   use: { ...devices['Desktop Firefox'] },
+    //   name: "easyrpa-firefox",
+    //   testDir: "./tests/easyrpa",
+    //   use: {
+    //     browserName: "firefox",
+    //     channel: "firefox",
+    //     viewport: { width: 1280, height: 720 },
+    //   },
     // },
-
     // {
-    //   name: 'webkit',
-    //   use: { ...devices['Desktop Safari'] },
+    //   name: "Microsoft Edge",
+    //   testDir: "./tests/easyrpa",
+    //   use: {
+    //     browserName: "chromium",
+    //     channel: "msedge",
+    //     ...devices["Desktop Chrome"],
+    //   },
     // },
 
     /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
+    //  {
+    //   name: "Mobile Chrome",
+    //   testDir: "./tests/easyrpa",
+    //   use: {
+    //     ...devices["Pixel 5"],  // emulated Android Chrome
+    //   },
     // },
     // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
+    //   name: "Mobile Safari",
+    //   testDir: "./tests/easyrpa",
+    //   use: {
+    //     ...devices["iPhone 15"], // emulated iOS Safari
+    //   },
     // },
   ],
 
