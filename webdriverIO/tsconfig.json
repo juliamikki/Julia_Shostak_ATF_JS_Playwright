@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "baseUrl": ".",
+    "paths": {
+      "#components": ["src/components/index.ts"],
+      "#components/*": ["src/components/*.ts"],
+      "#elements": ["src/elements/index.ts"],
+      "#elements/*": ["src/elements/*.ts"],
+      "#screens": ["src/screens/index.ts"],
+      "#screens/*": ["src/screens/*.ts"],
+      "#support/*": ["src/support/*.ts"],
+      "#config/*": ["configs/*.ts"]
+    },
+    "lib": ["ES2022", "DOM"],
+    "types": [
+      "node",
+      "mocha",
+      "@wdio/globals/types",
+      "expect-webdriverio",
+      "@wdio/mocha-framework"
+    ],
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true
+  },
+  "include": ["wdio.conf.ts", "configs/**/*.ts", "src/**/*.ts", "tests/**/*.ts"]
+}
