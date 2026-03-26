@@ -1,5 +1,5 @@
-import { Dialog, Message, TableRow } from "#components";
-import { BaseScreen } from "#screens";
+import { Dialog, Message, TableRow } from '#components';
+import { BaseScreen } from '#screens';
 
 export type AutomationProcessData = {
   name: string;
@@ -10,21 +10,19 @@ export type AutomationProcessData = {
 };
 
 export class AutomationProcessesScreen extends BaseScreen {
-  protected override async waitForKeyElements(): Promise<void> {
-    await this.waitForHeader("Automation Processes");
-  }
+  protected headerText = 'Automation Processes';
 
   async createAutomationProcess(data: AutomationProcessData): Promise<void> {
-    await this.button("Create New").click();
-    await this.waitForHeader("New Automation Process");
+    await this.button('Create New').click();
+    await this.expectHeader('New Automation Process');
 
-    await this.input("Name").fill(data.name);
-    await this.input("Module Class").fill(data.moduleClass);
-    await this.input("Group Id").fill(data.groupId);
-    await this.input("Artifact Id").fill(data.artifactId);
-    await this.input("Version Id").fill(data.versionId);
+    await this.input('Name').fill(data.name);
+    await this.input('Module Class').fill(data.moduleClass);
+    await this.input('Group Id').fill(data.groupId);
+    await this.input('Artifact Id').fill(data.artifactId);
+    await this.input('Version Id').fill(data.versionId);
 
-    await this.button("Create New").click();
+    await this.button('Create New').click();
     await this.message.expectTextAndClose(Message.Contents.apCreated);
   }
 
@@ -33,19 +31,21 @@ export class AutomationProcessesScreen extends BaseScreen {
   }
 
   private async deleteInRow(row: TableRow): Promise<Dialog> {
-    return row.clickDelete();
+    return row.clickButton('Delete');
   }
 
   private async confirmDeletion(dialog: Dialog): Promise<void> {
     await dialog.expectContent(Dialog.Contents.deleteHeading, Dialog.Contents.deleteMessage);
-    await dialog.confirmDelete();
+    await dialog.clickButton('Delete');
     await this.message.expectTextAndClose(Message.Contents.apDeleted);
   }
 
   async deleteAPInRow(data: AutomationProcessData): Promise<void> {
-    const row = this.table.getRowByCellValue(data.name);
+    const row = await this.table.getRowByCellValue(data.name);
+    if (!row) {
+      throw new Error(`No row with cell value [${data.name}] found.`);
+    }
     await row.check();
-
     const dialog = await this.deleteInRow(row);
     await this.confirmDeletion(dialog);
   }
@@ -53,7 +53,7 @@ export class AutomationProcessesScreen extends BaseScreen {
   async deleteAPviaSearchAndCheckFirst(data: AutomationProcessData): Promise<void> {
     await this.searchFor(data.name);
 
-    const row = this.table.getRowByIndex(0);
+    const row = await this.table.getRowByIndex(0);
     await row.check();
 
     const dialog = await this.deleteInRow(row);

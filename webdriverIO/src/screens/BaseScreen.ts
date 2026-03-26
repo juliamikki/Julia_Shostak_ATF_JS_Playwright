@@ -1,31 +1,33 @@
-import { browser, expect } from "@wdio/globals";
-import { Dialog, Message, NavigationMenu, Table } from "#components";
-import { Button, Input } from "#elements";
+import { expect } from '@wdio/globals';
+import { Dialog, Message, NavigationMenu, Table } from '#components';
+import { Button, Input } from '#elements';
 
 export abstract class BaseScreen {
+  private readonly spinner: ChainablePromiseElement;
   private readonly search: Input;
   private readonly backToList: Button;
   readonly navigationMenu: NavigationMenu;
   readonly table: Table;
+  protected headerText?: string;
 
   constructor() {
-    this.search = new Input(() => $("#search_field"));
-    //this.backToList = new Button(() => $("//div[*[@data-testid='KeyboardBackspaceIcon']]"));
-    this.backToList = new Button(() => $("[data-testid='KeyboardBackspaceIcon']"));
+    this.spinner = $("[role='progressbar']");
+    this.search = new Input($('#search_field'));
+    this.backToList = new Button($("[data-testid='KeyboardBackspaceIcon']"));
     this.navigationMenu = new NavigationMenu();
     this.table = new Table();
   }
 
   protected button(buttonText: string): Button {
-    return new Button(() => $(`//button[p[text()='${buttonText}'] or text()='${buttonText}']`));
+    return new Button($(`//button[p[text()='${buttonText}'] or text()='${buttonText}']`));
   }
 
   protected input(label: string): Input {
-    return new Input(() => $(`//label[text()='${label}']/following::input[1]`));
+    return new Input($(`//label[text()='${label}']/following::input[1]`));
   }
 
   protected inputById(id: string): Input {
-    return new Input(() => $(`#${id}`));
+    return new Input($(`#${id}`));
   }
 
   protected get message(): Message {
@@ -34,7 +36,8 @@ export abstract class BaseScreen {
 
   async searchFor(text: string): Promise<void> {
     await this.search.fill(text);
-    await this.waitForSpinner();
+    await this.table.waitForTable();
+    await this.table.waitForFiltering();
     await this.table.expectRowCount(1);
   }
 
@@ -44,29 +47,21 @@ export abstract class BaseScreen {
   }
 
   async clickDelete(): Promise<Dialog> {
-    await this.button("Delete").click();
+    await this.button('Delete').click();
     const dialog = new Dialog();
-    await dialog.waitForVisible();
+    await dialog.waitForDisplayed();
     return dialog;
   }
 
   async waitForReady(): Promise<void> {
-    await browser.waitUntil(async () => (await browser.execute(() => document.readyState)) === "complete", {
-      timeout: 20000,
-      timeoutMsg: "Page did not finish loading in time.",
-    });
-    await this.waitForSpinner();
-    await this.waitForKeyElements();
+    await this.spinner.waitForDisplayed({ reverse: true, timeout: 20000 });
+    if (this.headerText) {
+      await this.expectHeader(this.headerText);
+    }
   }
 
-  protected async waitForKeyElements(): Promise<void> {}
-
-  protected async waitForHeader(text: string): Promise<void> {
-    await expect($(`//h5[text()='${text}']`)).toBeDisplayed();
-  }
-
-  private async waitForSpinner(): Promise<void> {
-    const spinner = $("[role='progressbar']");
-    await spinner.waitForExist({ reverse: true, timeout: 20000 });
+  protected async expectHeader(text: string): Promise<void> {
+    const header = await $(`//h5[text()='${text}']`);
+    await expect(header).toBeDisplayed();
   }
 }

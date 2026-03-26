@@ -18,13 +18,7 @@
       "#config/*": ["configs/*.ts"]
     },
     "lib": ["ES2022", "DOM"],
-    "types": [
-      "node",
-      "mocha",
-      "@wdio/globals/types",
-      "expect-webdriverio",
-      "@wdio/mocha-framework"
-    ],
+    "types": ["node", "mocha", "@wdio/globals/types", "expect-webdriverio", "@wdio/mocha-framework"],
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "isolatedModules": true,

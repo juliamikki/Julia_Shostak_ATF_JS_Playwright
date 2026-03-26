@@ -1,4 +1,4 @@
-import { BaseElement } from "#elements";
+import { BaseElement } from '#elements';
 
 export class Input extends BaseElement {
   async fill(value: string): Promise<void> {

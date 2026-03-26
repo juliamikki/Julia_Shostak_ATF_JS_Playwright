@@ -1,53 +1,80 @@
-import { expect } from "@wdio/globals";
-import { BaseComponent, TableRow } from "#components";
+import { expect } from '@wdio/globals';
+import { BaseComponent, TableRow } from '#components';
 
 export class Table extends BaseComponent {
+  private readonly spinner: ChainablePromiseElement;
+
   constructor() {
-    super(() => $(".MuiTable-stickyHeader"));
+    super('.MuiTable-stickyHeader');
+    this.spinner = $("[role='progressbar']");
   }
 
-  private async rowElements(): Promise<WebdriverIO.Element[]> {
-    const tbody = await this.root.$("tbody");
-    const rows = await tbody.$$("tr");
-    const visibleRows: WebdriverIO.Element[] = [];
-
-    for (const row of rows) {
-      if (await row.isDisplayed()) {
-        visibleRows.push(row);
-      }
-    }
-
-    return visibleRows;
+  private async getRows(): Promise<WebdriverIO.ElementArray> {
+    let rows = await $$('.MuiTable-stickyHeader tbody tr');
+    rows.shift(); //removes first hidden row of the table
+    return rows;
   }
 
   getHeaderRow(): TableRow {
-    return new TableRow(() => this.root.$("thead"));
+    return new TableRow(this.root.$('thead tr'));
   }
 
-  getRowByIndex(index: number): TableRow {
-    return new TableRow(() => this.root.$(`tbody tr:nth-of-type(${index + 1})`));
+  async getRowByIndex(index: number): Promise<TableRow> {
+    const rows = await this.getRows();
+    if (rows.length == 0) {
+      throw new Error(`Row index [${index}] does not exist in the table. The table is empty.`);
+    }
+    if (index >= rows.length) {
+      throw new Error(`Row index [${index}] does not exist in the table; total rows: ${rows.length}.`);
+    }
+    return new TableRow(rows[index]);
   }
 
-  getRowByCellValue(value: string): TableRow {
-    return new TableRow(() => this.root.$(`//tbody//tr[.//td/a[text()='${value}']]`));
+  async getRowByCellValue(value: string): Promise<TableRow | null> {
+    const rows = await this.getRows();
+    for (const row of rows) {
+      const cells = await row.$$('td');
+      for (const cell of cells) {
+        const text = await cell.getText();
+        if (text === value) {
+          return new TableRow(row);
+        }
+      }
+    }
+    return null;
   }
 
-  async waitForTable(): Promise<void> {
-    const spinner = $("[role='progressbar']");
-    await spinner.waitForExist({ reverse: true, timeout: 20000 });
-    await expect(this.root.$("tbody")).toBeDisplayed();
+  async expectRowToExist(value: string): Promise<void> {
+    const row = await this.getRowByCellValue(value);
+    if (!row) throw new Error(`No row with cell value [${value}] found.`);
+    await expect(row.element).toBeDisplayed();
+  }
+
+  async expectRowNotToExist(value: string): Promise<void> {
+    const row = await this.getRowByCellValue(value);
+    if (row) throw new Error(`Row with cell value [${value}] exists but should not.`);
+    await expect(row).toBeNull();
+  }
+
+  async expectRowCount(count: number): Promise<void> {
+    const rows = await this.getRows();
+    expect(rows.length).toBe(count);
   }
 
   async expectToBeEmpty(): Promise<void> {
     await this.expectRowCount(0);
   }
 
-  async expectRowCount(count: number): Promise<void> {
-    const rows = await this.rowElements();
-    expect(rows.length).toBe(count);
+  async waitForTable(): Promise<void> {
+    await this.spinner.waitForDisplayed({ reverse: true, timeout: 5000 });
+    await expect(this.root.$('tbody')).toBeDisplayed();
   }
 
-  async expectRowNotToExist(value: string): Promise<void> {
-    await expect(this.root.$(`//tbody//tr[.//td/a[text()='${value}']]`)).not.toExist();
+  async waitForFiltering(): Promise<void> {
+    const initialCount = (await this.getRows()).length;
+    await browser.waitUntil(async () => {
+      const newCount = (await this.getRows()).length;
+      return newCount !== initialCount;
+    });
   }
 }
