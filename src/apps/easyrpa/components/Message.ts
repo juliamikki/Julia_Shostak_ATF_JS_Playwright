@@ -9,7 +9,7 @@ export class Message extends BaseComponent {
   };
 
   constructor(page: Page) {
-    super(page, page.getByRole('alert'));
+    super(page.getByRole('alert'));
   }
 
   private get closeButton(): Button {

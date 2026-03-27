@@ -4,7 +4,7 @@ import { Checkbox, Button } from '@apps/easyrpa/elements';
 
 export class TableRow extends BaseComponent {
   constructor(locator: Locator) {
-    super(locator.page(), locator);
+    super(locator);
   }
 
   private get checkbox(): Checkbox {

@@ -11,7 +11,7 @@ export type AutomationProcessData = {
 };
 
 export class AutomationProcessesScreen extends BaseScreen {
-  protected header = 'Automation Processes';
+  protected headerText = 'Automation Processes';
 
   constructor(page: Page) {
     super(page);

@@ -9,9 +9,10 @@ export class Dialog extends BaseComponent {
   };
 
   constructor(page: Page) {
-    super(page, page.getByRole('dialog'));
+    super(page.getByRole('dialog'));
   }
 
+  //fix:
   private heading(text: string): Locator {
     return this.root.getByRole('heading', { name: text });
   }
