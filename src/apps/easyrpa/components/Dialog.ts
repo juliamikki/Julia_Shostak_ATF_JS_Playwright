@@ -9,15 +9,15 @@ export class Dialog extends BaseComponent {
   };
 
   constructor(page: Page) {
-    super(page, page.getByRole('dialog'));
+    super(page.getByRole('dialog'));
   }
 
-  private heading(text: string): Locator {
-    return this.root.getByRole('heading', { name: text });
+  private get heading(): Locator {
+    return this.root.getByRole('heading');
   }
 
-  private message(text: string): Locator {
-    return this.root.getByText(text);
+  private get message(): Locator {
+    return this.root.locator('#confirm-modal-description');
   }
 
   private button(name: string): Button {
@@ -28,8 +28,8 @@ export class Dialog extends BaseComponent {
     await this.button(name).click();
   }
 
-  async expectContent(heading: string, message: string): Promise<void> {
-    await expect(this.heading(heading)).toBeVisible();
-    await expect(this.message(message)).toBeVisible();
+  async expectContent(headingText: string, messageText: string): Promise<void> {
+    await expect(this.heading).toHaveText(headingText);
+    await expect(this.message).toHaveText(messageText);
   }
 }

@@ -1,12 +1,14 @@
 import { Page, Locator, expect } from '@playwright/test';
 
 export abstract class BaseComponent {
-  protected readonly page: Page;
   protected readonly root: Locator;
 
-  constructor(page: Page, root: Locator) {
-    this.page = page;
+  constructor(root: Locator) {
     this.root = root;
+  }
+
+  protected get page(): Page {
+    return this.root.page();
   }
 
   //customizable wait for component:

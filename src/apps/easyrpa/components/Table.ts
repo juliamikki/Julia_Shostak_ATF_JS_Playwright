@@ -5,13 +5,12 @@ export class Table extends BaseComponent {
   private readonly spinner: Locator;
 
   constructor(page: Page) {
-    const root = page.locator('.MuiTable-stickyHeader');
-    super(page, root);
+    super(page.locator('.MuiTable-stickyHeader'));
     this.spinner = this.page.getByRole('progressbar');
   }
 
   private get rows(): Locator {
-    return this.root.locator('tbody').getByRole('row');
+    return this.root.locator('tbody').getByRole('row').filter({ visible: true });
   }
 
   private rowLocatorByCellValue(value: string): Locator {
@@ -21,11 +20,11 @@ export class Table extends BaseComponent {
   }
 
   getHeaderRow(): TableRow {
-    return new TableRow(this.root.locator('thead'));
+    return new TableRow(this.root.locator('thead').getByRole('row'));
   }
 
   getRowByIndex(index: number): TableRow {
-    const row = this.rows.nth(index + 1);
+    const row = this.rows.nth(index);
     return new TableRow(row);
   }
 
@@ -42,11 +41,15 @@ export class Table extends BaseComponent {
   }
 
   async expectRowCount(count: number): Promise<void> {
-    const visibleRows = this.rows.filter({ visible: true });
-    await expect(visibleRows).toHaveCount(count);
+    await expect(this.rows).toHaveCount(count);
   }
 
   async expectToBeEmpty(): Promise<void> {
     await this.expectRowCount(0);
+  }
+
+  async waitForTable(): Promise<void> {
+    await this.spinner.waitFor({ state: 'detached' });
+    await expect(this.root.locator('tbody')).toBeVisible();
   }
 }
