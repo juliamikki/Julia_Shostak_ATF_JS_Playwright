@@ -1,20 +1,20 @@
-import type { ChainablePromiseElement } from "webdriverio";
-
-type ResolvedElement = ChainablePromiseElement<WebdriverIO.Element>;
-type ElementResolver = () => ResolvedElement;
-
 export abstract class BaseComponent {
-  protected readonly rootLocator: ElementResolver;
+  protected readonly locator?: string;
+  protected readonly rootLocator?: ChainablePromiseElement | WebdriverIO.Element;
 
-  constructor(rootLocator: ElementResolver) {
-    this.rootLocator = rootLocator;
+  constructor(root: string | ChainablePromiseElement | WebdriverIO.Element) {
+    if (typeof root === 'string') {
+      this.locator = root;
+    } else {
+      this.rootLocator = root;
+    }
   }
 
-  protected get root(): ResolvedElement {
-    return this.rootLocator();
+  protected get root(): ChainablePromiseElement | WebdriverIO.Element {
+    return this.rootLocator ?? $(this.locator!);
   }
 
-  async waitForVisible(timeout = 5000): Promise<void> {
-    await this.root.waitForDisplayed({ timeout });
+  async waitForDisplayed(timeout = 5000): Promise<void> {
+    await (this.root as ChainablePromiseElement).waitForDisplayed({ timeout });
   }
 }

@@ -1,62 +1,53 @@
-import { expect } from "@wdio/globals";
-import { BaseComponent } from "#components";
-import { Button } from "#elements";
+import { expect } from '@wdio/globals';
+import { BaseComponent } from '#components';
+import { Button } from '#elements';
+import { AutomationProcessesScreen } from '#screens';
 
 export class NavigationMenu extends BaseComponent {
   constructor() {
-    super(() => $(".MuiDrawer-paper"));
+    super('.MuiDrawer-paper');
   }
 
   private get arrow(): Button {
-    return new Button(() => this.root.$("#arrow_icon"));
+    return new Button(this.root.$('#arrow_icon'));
   }
 
-  private get expandedIcon() {
-    return this.root.$('[data-testid="ChevronLeftIcon"]');
-  }
-
-  private get collapsedIcon() {
-    return this.root.$('[data-testid="ChevronRightIcon"]');
+  private get arrowIcon(): ChainablePromiseElement {
+    return this.root.$('#arrow_icon svg');
   }
 
   private module(name: string) {
-    return this.root.$(`//a[div/span[text()='${name}']]`);
+    return this.root.$(`.//a[.//span[text()='${name}']]`);
   }
 
-  async goToModule(moduleName: "Automation Processes"): Promise<void> {
-    await this.module(moduleName).click();
+  //to be extended:
+  private screens = { 'Automation Processes': AutomationProcessesScreen };
 
-    if (moduleName === "Automation Processes") {
-      const { AutomationProcessesScreen } = await import("../screens/AutomationProcessesScreen.js");
-      await new AutomationProcessesScreen().waitForReady();
-    }
+  async goToModule(moduleName: keyof NavigationMenu['screens']): Promise<void> {
+    await this.module(moduleName).waitForClickable();
+    await this.module(moduleName).click();
+    const ScreenClass = this.screens[moduleName];
+    await new ScreenClass().waitForReady();
+  }
+
+  async isExpanded(): Promise<boolean> {
+    const state = await this.arrowIcon.getAttribute('data-testid');
+    return state === 'ChevronLeftIcon';
   }
 
   async openMenu(): Promise<void> {
-    await this.waitForVisible();
+    await this.waitForDisplayed();
     if (!(await this.isExpanded())) {
       await this.arrow.click();
-      await this.waitUntilExpanded();
+      await expect(this.arrowIcon).toHaveAttribute('data-testid', 'ChevronLeftIcon');
     }
   }
 
   async closeMenu(): Promise<void> {
-    await this.waitForVisible();
+    await this.waitForDisplayed();
     if (await this.isExpanded()) {
       await this.arrow.click();
-      await this.waitUntilCollapsed();
+      await expect(this.arrowIcon).toHaveAttribute('data-testid', 'ChevronRightIcon');
     }
-  }
-
-  async waitUntilExpanded(): Promise<void> {
-    await expect(this.expandedIcon).toBeDisplayed();
-  }
-
-  async waitUntilCollapsed(): Promise<void> {
-    await expect(this.collapsedIcon).toBeDisplayed();
-  }
-
-  private async isExpanded(): Promise<boolean> {
-    return this.expandedIcon.isDisplayed();
   }
 }

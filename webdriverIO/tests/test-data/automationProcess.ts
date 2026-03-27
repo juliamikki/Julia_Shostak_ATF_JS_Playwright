@@ -1,9 +1,9 @@
 export default {
   newAP: {
-    name: "[Test] Automation Process",
-    moduleClass: "eu.ibagroup.easyrpa.taskexecution.ExecuteDemoAp",
-    groupId: "eu.ibagroup",
-    artifactId: "kb-short-samples",
-    versionId: "3.2.0",
-  },
+    name: '[Test] Automation Process',
+    moduleClass: 'eu.ibagroup.easyrpa.taskexecution.ExecuteDemoAp',
+    groupId: 'eu.ibagroup',
+    artifactId: 'kb-short-samples',
+    versionId: '3.2.0'
+  }
 };

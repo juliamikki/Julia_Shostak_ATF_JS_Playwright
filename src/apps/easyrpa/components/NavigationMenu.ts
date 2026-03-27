@@ -5,7 +5,7 @@ import { AutomationProcessesScreen } from '@apps/easyrpa/screens';
 
 export class NavigationMenu extends BaseComponent {
   constructor(page: Page) {
-    super(page, page.locator('.MuiDrawer-paper'));
+    super(page.locator('.MuiDrawer-paper'));
   }
 
   private get arrow(): Button {

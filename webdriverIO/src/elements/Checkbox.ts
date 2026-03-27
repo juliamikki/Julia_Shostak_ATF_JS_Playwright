@@ -1,4 +1,4 @@
-import { BaseElement } from "#elements";
+import { BaseElement } from '#elements';
 
 export class Checkbox extends BaseElement {
   async check(): Promise<void> {

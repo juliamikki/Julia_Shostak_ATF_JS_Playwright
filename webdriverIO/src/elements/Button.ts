@@ -1,3 +1,3 @@
-import { BaseElement } from "#elements";
+import { BaseElement } from '#elements';
 
 export class Button extends BaseElement {}

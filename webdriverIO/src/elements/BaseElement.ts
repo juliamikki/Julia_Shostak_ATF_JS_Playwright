@@ -1,17 +1,17 @@
-import type { ChainablePromiseElement } from "webdriverio";
-
-type ResolvedElement = ChainablePromiseElement<WebdriverIO.Element>;
-type ElementResolver = () => ResolvedElement;
-
 export abstract class BaseElement {
-  protected readonly locator: ElementResolver;
+  protected readonly locator?: string;
+  protected readonly rootLocator?: ChainablePromiseElement;
 
-  constructor(locator: ElementResolver) {
-    this.locator = locator;
+  constructor(locator: string | ChainablePromiseElement) {
+    if (typeof locator === 'string') {
+      this.locator = locator;
+    } else {
+      this.rootLocator = locator;
+    }
   }
 
-  protected get element(): ResolvedElement {
-    return this.locator();
+  protected get element() {
+    return this.rootLocator ?? $(this.locator!);
   }
 
   async click(): Promise<void> {
@@ -19,7 +19,7 @@ export abstract class BaseElement {
     await this.element.click();
   }
 
-  async isVisible(): Promise<boolean> {
+  async isDisplayed(): Promise<boolean> {
     return this.element.isDisplayed();
   }
 

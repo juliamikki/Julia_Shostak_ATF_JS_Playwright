@@ -9,7 +9,7 @@ export abstract class BaseScreen {
   private readonly backToList: Button;
   readonly navigationMenu: NavigationMenu;
   readonly table: Table;
-  protected header?: string;
+  protected headerText?: string;
 
   constructor(page: Page) {
     this.page = page;
@@ -38,7 +38,7 @@ export abstract class BaseScreen {
 
   async searchFor(text: string): Promise<void> {
     await this.search.fill(text);
-    await this.spinner.waitFor({ state: 'detached' });
+    await this.table.waitForTable();
     await this.table.expectRowCount(1);
   }
 
@@ -57,8 +57,8 @@ export abstract class BaseScreen {
   async waitForReady(): Promise<void> {
     await this.page.waitForLoadState('load');
     await this.spinner.waitFor({ state: 'detached' });
-    if (this.header) {
-      await this.expectHeader(this.header);
+    if (this.headerText) {
+      await this.expectHeader(this.headerText);
     }
   }
 
