@@ -1,5 +1,5 @@
-import { Dialog, Message, TableRow } from '#components';
 import { BaseScreen } from '#screens';
+import { Message } from '#components';
 
 export type AutomationProcessData = {
   name: string;
@@ -26,46 +26,28 @@ export class AutomationProcessesScreen extends BaseScreen {
     await this.message.expectTextAndClose(Message.Contents.apCreated);
   }
 
-  private async deleteInPageHeader(): Promise<Dialog> {
-    return this.clickDelete();
-  }
-
-  private async deleteInRow(row: TableRow): Promise<Dialog> {
-    return row.clickButton('Delete');
-  }
-
-  private async confirmDeletion(dialog: Dialog): Promise<void> {
-    await dialog.expectContent(Dialog.Contents.deleteHeading, Dialog.Contents.deleteMessage);
-    await dialog.clickButton('Delete');
-    await this.message.expectTextAndClose(Message.Contents.apDeleted);
-  }
-
-  async deleteAPInRow(data: AutomationProcessData): Promise<void> {
-    const row = await this.table.getRowByCellValue(data.name);
-    if (!row) {
-      throw new Error(`No row with cell value [${data.name}] found.`);
+  async deleteAutomationProcess(
+    data: AutomationProcessData,
+    options?: { search?: boolean; checkAll?: boolean; rowIndex?: number }
+  ): Promise<void> {
+    if (options?.search) {
+      await this.searchFor(data.name);
     }
+
+    if (options?.checkAll) {
+      await this.table.getHeaderRow().check();
+      await this.deleteAndConfirm();
+      await this.message.expectTextAndClose(Message.Contents.apDeleted);
+      return;
+    }
+
+    const row =
+      options?.rowIndex === undefined
+        ? await this.table.getRowByCellValue(data.name)
+        : await this.table.getRowByIndex(options?.rowIndex);
     await row.check();
-    const dialog = await this.deleteInRow(row);
-    await this.confirmDeletion(dialog);
-  }
 
-  async deleteAPviaSearchAndCheckFirst(data: AutomationProcessData): Promise<void> {
-    await this.searchFor(data.name);
-
-    const row = await this.table.getRowByIndex(0);
-    await row.check();
-
-    const dialog = await this.deleteInRow(row);
-    await this.confirmDeletion(dialog);
-  }
-
-  async deleteAPviaSearchAndCheckAll(data: AutomationProcessData): Promise<void> {
-    await this.searchFor(data.name);
-
-    await this.table.getHeaderRow().check();
-
-    const dialog = await this.deleteInPageHeader();
-    await this.confirmDeletion(dialog);
+    await row.deleteAndConfirm();
+    await this.message.expectTextAndClose(Message.Contents.apDeleted);
   }
 }

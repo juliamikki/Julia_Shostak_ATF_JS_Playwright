@@ -46,11 +46,11 @@ export abstract class BaseScreen {
     await this.waitForReady();
   }
 
-  async clickDelete(): Promise<Dialog> {
+  async deleteAndConfirm(): Promise<void> {
     await this.button('Delete').click();
     const dialog = new Dialog();
     await dialog.waitForDisplayed();
-    return dialog;
+    await dialog.confirm('Delete');
   }
 
   async waitForReady(): Promise<void> {

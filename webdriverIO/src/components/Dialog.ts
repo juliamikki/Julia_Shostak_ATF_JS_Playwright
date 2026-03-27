@@ -4,8 +4,11 @@ import { Button } from '#elements';
 
 export class Dialog extends BaseComponent {
   static readonly Contents = {
-    deleteHeading: 'Please, confirm your action',
-    deleteMessage: 'Are you sure you want to delete selected automation process?'
+    Delete: {
+      heading: 'Please, confirm your action',
+      message: 'Are you sure you want to delete selected automation process?',
+      confirmButton: 'Delete'
+    }
   };
 
   constructor() {
@@ -24,12 +27,10 @@ export class Dialog extends BaseComponent {
     return this.root.$(`#confirm-modal-description`);
   }
 
-  async clickButton(name: string): Promise<void> {
-    await this.button(name).click();
-  }
-
-  async expectContent(heading: string, message: string): Promise<void> {
-    await expect(this.heading).toHaveText(heading);
-    await expect(this.message).toHaveText(message);
+  async confirm(dialogType: keyof typeof Dialog.Contents): Promise<void> {
+    const content = Dialog.Contents[dialogType];
+    await expect(this.heading).toHaveText(content.heading);
+    await expect(this.message).toHaveText(content.message);
+    await this.button(content.confirmButton).click();
   }
 }

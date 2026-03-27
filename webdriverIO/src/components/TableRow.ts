@@ -22,10 +22,10 @@ export class TableRow extends BaseComponent {
     await this.checkbox.check();
   }
 
-  async clickButton(name: string): Promise<Dialog> {
-    await this.button(name).click();
+  async deleteAndConfirm(): Promise<void> {
+    await this.button('Delete').click();
     const dialog = new Dialog();
     await dialog.waitForDisplayed();
-    return dialog;
+    await dialog.confirm('Delete');
   }
 }
