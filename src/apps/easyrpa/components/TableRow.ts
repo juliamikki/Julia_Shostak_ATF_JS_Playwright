@@ -11,8 +11,8 @@ export class TableRow extends BaseComponent {
     return new Checkbox(this.root.getByRole('checkbox'));
   }
 
-  private get deleteButton(): Button {
-    return new Button(this.root.locator(`[aria-label="Delete"] button`));
+  private button(name: string): Button {
+    return new Button(this.root.locator(`[aria-label='${name}'] button`));
   }
 
   async check(): Promise<void> {
@@ -20,8 +20,7 @@ export class TableRow extends BaseComponent {
   }
 
   async clickDelete(): Promise<Dialog> {
-    await this.deleteButton.click();
-
+    await this.button('Delete').click();
     const dialog = new Dialog(this.root.page());
     await dialog.waitForVisible();
     return dialog;
